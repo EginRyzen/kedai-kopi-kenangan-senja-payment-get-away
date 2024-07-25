@@ -64,6 +64,36 @@ document.addEventListener('alpine:init', () => {
     });
 });
 
+//Form Validasi
+const checkoutButton = document.querySelector('.checkout-button');
+checkoutButton.disabled = true;
+
+const form = document.querySelector('#checkoutForm');
+
+// form.addEventListener('keyup' , function(){
+//     if (form.elements[0].value.length !==0 && form.elements[1].value.length !==0 && form.elements[2].value.length !==0) {
+//         checkoutButton.disabled = false;
+//     }else{
+//         checkoutButton.disabled = true;
+//         // checkoutButton.classList.remove('disabled');
+//     }
+// });
+
+form.addEventListener('keyup' , function(){
+    for(let i = 0; i < form.elements.length; i++){
+        if (form.elements[i].value.length !== 0) {
+            checkoutButton.classList.remove('disabled');
+            checkoutButton.classList.add('disabled');
+            // alert('Form Belum Lengkap');
+        }else{
+            return false;
+        }
+    }
+    checkoutButton.disabled = false;
+    checkoutButton.classList.remove('disabled');
+
+});
+
 // Konversi ke Rupiah 
 const rupiah = (number) => {
     return new Intl.NumberFormat("id-ID", {
