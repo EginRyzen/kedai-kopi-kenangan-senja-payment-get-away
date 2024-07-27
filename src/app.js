@@ -94,6 +94,48 @@ form.addEventListener('keyup' , function(){
 
 });
 
+//Kirim Data ketika tombol checkout klik
+checkoutButton.addEventListener('click', async function (e) {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    const data = new URLSearchParams(formData);
+    const objData = Object.fromEntries(data);
+    // const message = formatMessage(objData);
+    // window.open('https://wa.me/6285156696153?text=' + encodeURIComponent(message));
+
+    //MInta transaction token dengan ajax / fetch
+    try {
+        const response = await fetch('php/placeOrder.php', {
+            method: 'POST',
+            body: data,
+        });
+        const token = await response.text();
+        // console.log(token);
+        window.snap.pay(token);
+    } catch (err) {
+        console.log(err.message);
+    }
+
+});
+
+//Format Pesan Whatsapp
+const formatMessage = (obj) => {
+    return `
+Data Customer
+\tName  : ${obj.name}
+\tEmail : ${obj.email}
+\tPhone : ${obj.phone}
+
+Data Pesanan
+${JSON.parse(obj.items).map((item) => `\t${item.name} (${item.quantity} x ${rupiah(item.total)}),`).join('\n')}
+
+Total       : ${rupiah(obj.total)}
+
+Terima kasih.
+    `
+}
+
 // Konversi ke Rupiah 
 const rupiah = (number) => {
     return new Intl.NumberFormat("id-ID", {
